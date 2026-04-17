@@ -1,0 +1,186 @@
+using UnityEngine;
+using System.Collections;
+using System.Numerics; //for coroutines
+using Vector3 = UnityEngine.Vector3;
+using Quaternion = UnityEngine.Quaternion;
+
+
+
+public class Gun : MonoBehaviour
+{
+    public AudioClip reloadSFX;
+    public AudioClip shootingSFX;
+    public float shootingVol = 0.25f;
+
+    public float reloadTime = 1f;
+    public float fireRate = 0.15f;
+    public int magSize = 20;
+
+    public GameObject bullet;
+    public Transform bulletSpawnPoint;
+
+
+
+    public GameObject weaponFlash;
+    public GameObject droppedWeapon;
+
+    public float recoilDistance = 0.1f;
+    public float recoilSpeed = 15f;
+
+
+    private int currentAmmo;
+    private bool isReloading = false;
+    private float nextTimeToFire = 0f;
+
+    private Quaternion initialRotation;
+    private Vector3 initialPosition;
+    private Vector3 reloadRotationOffset = new Vector3(66, 50, 50);
+
+
+
+
+    void Start()
+    {
+        currentAmmo = magSize;
+        initialRotation = transform.localRotation;
+        initialPosition = transform.localPosition;
+
+    }
+
+    public void Shoot()
+    {
+        if (isReloading) return;
+        if (Time.time < nextTimeToFire) return;
+
+        Debug.Log("shoot");
+        if(currentAmmo <= 0)
+        {
+            StartCoroutine(Reload());
+            return;
+        }
+
+        
+        nextTimeToFire = Time.time + fireRate;
+        currentAmmo--;
+
+        AudioManager.Instance.PlaySFX(shootingSFX, shootingVol);
+
+        Instantiate(bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+        Instantiate(weaponFlash, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+
+
+
+        StopCoroutine(nameof(Recoil)); //so no two coroutines at the same time. should this be reload?
+        StartCoroutine(nameof(Recoil));
+    }
+
+
+    IEnumerator Reload()
+    {
+        AudioManager.Instance.PlaySFX(reloadSFX);
+        isReloading = true;
+
+        Quaternion targetRotation = Quaternion.Euler(initialRotation.eulerAngles + reloadRotationOffset);
+        float halfReload = reloadTime / 2f;
+        float t = 0f;
+
+        while(t < halfReload)
+        {
+            t += Time.deltaTime;
+            transform.localRotation = Quaternion.Slerp(initialRotation, targetRotation, t/ halfReload);
+            yield return null;
+        }
+
+        t = 0f;
+
+        while(t < halfReload)
+        {
+            t += Time.deltaTime;
+            transform.localRotation = Quaternion.Slerp(targetRotation, initialRotation, t/ halfReload);
+            yield return null;
+        }
+
+        currentAmmo = magSize;
+        isReloading = false;
+    }
+
+    public void TryReload()
+    {
+        if (isReloading) return;
+        if (currentAmmo == magSize) return;
+
+        StartCoroutine(Reload());
+    }
+
+
+    private IEnumerator Recoil()
+    {
+        Vector3 recoilTarget = initialPosition + new Vector3(recoilDistance, 0, 0);
+        float t = 0f;
+
+        while(t < 1f)
+        {
+            t += Time.deltaTime * recoilSpeed;
+            transform.localPosition = Vector3.Lerp(initialPosition, recoilTarget, t);
+            yield return null;
+        }
+
+        t = 0f;
+
+        while(t < 1f)
+        {
+            t += Time.deltaTime * recoilSpeed;
+            transform.localPosition = Vector3.Lerp(recoilTarget, initialPosition, t);
+            yield return null;
+        }
+
+        transform.localPosition = initialPosition;
+    }
+
+
+    public void TryToggleZoom(bool zoomed)
+    {
+        Debug.Log("trytogglezoom triggered");
+        if (zoomed)
+        {//now zoom out
+            //StartCoroutine(ZoomOut());
+            Debug.Log("zoomout");
+        } else
+        {
+            //zoom in
+            //StartCoroutine(ZoomIn());
+            Debug.Log("zoomin");
+        }
+        
+
+        
+    }
+    public Transform ZoomInLoc;
+    public float zoomspeed = 2f;
+
+    private IEnumerator ZoomIn()
+    {
+        Vector3 ZoomPos = ZoomInLoc.position;
+        float t = 0f;
+
+        while(t < 1f)
+        {
+            t += Time.deltaTime * zoomspeed;
+            transform.localPosition = Vector3.Lerp(initialPosition, ZoomPos, t);
+            yield return null;
+        }
+
+        
+        
+
+        transform.localPosition = ZoomPos;
+    }
+
+
+
+    public void Drop()
+    {
+        Instantiate(droppedWeapon, transform.position, transform.rotation);
+        Destroy(gameObject);
+    }
+}
