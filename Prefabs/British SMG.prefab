@@ -122,6 +122,8 @@ Transform:
   m_Children:
   - {fileID: 6736668254983145175}
   - {fileID: 2758252792937560397}
+  - {fileID: 1100365942296679718}
+  - {fileID: 2881301785019747040}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2444079900200346684
@@ -137,19 +139,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gun
   reloadSFX: {fileID: 8300000, guid: 2d862af88c0b559df9e39b67c062f011, type: 3}
+  reloadSFXVol: 0.05
   shootingSFX: {fileID: 8300000, guid: 45555f82a20d96cab814e496a85b854c, type: 3}
   shootingVol: 0.15
   reloadTime: 1
   fireRate: 0.09
   magSize: 30
+  hipPos: {fileID: 1100365942296679718}
+  zoomPos: {fileID: 2881301785019747040}
+  Zoomed: 0
   bullet: {fileID: 5341742223406746680, guid: 9c3cddd6060b7cc4eadfb9cefcf6e7db, type: 3}
   bulletSpawnPoint: {fileID: 6736668254983145175}
   weaponFlash: {fileID: 8096193669464218808, guid: 74e65bdb24a00ad818513e2466bd95c9, type: 3}
   droppedWeapon: {fileID: 1281955101004322, guid: 099eb166e5ef2aa4bb3dbb751a27f4e5, type: 3}
   recoilDistance: 0.06
   recoilSpeed: 15
-  ZoomInLoc: {fileID: 0}
-  zoomspeed: 2
+  zoomSpeed: 4
 --- !u!1 &1445072637834810
 GameObject:
   m_ObjectHideFlags: 0
@@ -510,6 +515,68 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &1728759204929055510
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1100365942296679718}
+  m_Layer: 0
+  m_Name: hippos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1100365942296679718
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1728759204929055510}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4492416587473386}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4737098740203629299
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2881301785019747040}
+  m_Layer: 0
+  m_Name: zoompos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2881301785019747040
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4737098740203629299}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.492, y: 0.256, z: -0.689}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4492416587473386}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5939802041359043294
 GameObject:
   m_ObjectHideFlags: 0

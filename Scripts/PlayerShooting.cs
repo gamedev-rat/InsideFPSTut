@@ -11,17 +11,21 @@ public class PlayerShooting : MonoBehaviour
     private bool isHoldingShoot = false;
     private bool isZoomedIn = false;
 
+    void OnZoomButton()
+    {
+        Debug.Log("pressed zoom");
+        if(gun != null)
+        {
+            gun.ToggleZoom();
+        }
+    }
     void OnShoot()
     {
         Debug.Log("tried shoot! command");
         isHoldingShoot = true;
     }
 
-    void onZoom()
-    {
-        Debug.Log("tried zoom! command");
-        //gun.TryZoom();
-    }
+
 
     void OnShootRelease()
     {

@@ -8,13 +8,20 @@ using Quaternion = UnityEngine.Quaternion;
 
 public class Gun : MonoBehaviour
 {
-    public AudioClip reloadSFX;
-    public AudioClip shootingSFX;
-    public float shootingVol = 0.25f;
+    [SerializeField] private AudioClip reloadSFX;
+    [SerializeField] private float reloadSFXVol = 0.1f;
+    [SerializeField] private AudioClip shootingSFX;
+    [SerializeField] private float shootingVol = 0.25f;
 
-    public float reloadTime = 1f;
-    public float fireRate = 0.15f;
-    public int magSize = 20;
+    [SerializeField] private float reloadTime = 1f;
+    [SerializeField] private float fireRate = 0.15f;
+    [SerializeField] private int magSize = 20;
+
+    [SerializeField] private Transform hipPos;
+    [SerializeField] private Transform zoomPos;
+
+
+    [SerializeField] private bool Zoomed = false;
 
     public GameObject bullet;
     public Transform bulletSpawnPoint;
@@ -77,7 +84,7 @@ public class Gun : MonoBehaviour
 
     IEnumerator Reload()
     {
-        AudioManager.Instance.PlaySFX(reloadSFX);
+        AudioManager.Instance.PlaySFX(reloadSFX,reloadSFXVol);
         isReloading = true;
 
         Quaternion targetRotation = Quaternion.Euler(initialRotation.eulerAngles + reloadRotationOffset);
@@ -115,13 +122,23 @@ public class Gun : MonoBehaviour
 
     private IEnumerator Recoil()
     {
-        Vector3 recoilTarget = initialPosition + new Vector3(recoilDistance, 0, 0);
+        Vector3 testpos;
+        if(Zoomed)
+        {
+            testpos = zoomPos.localPosition;
+        }
+        else
+        {
+            testpos = hipPos.localPosition;
+        }
+        
+        Vector3 recoilTarget = testpos + new Vector3(recoilDistance, 0, 0);
         float t = 0f;
 
         while(t < 1f)
         {
             t += Time.deltaTime * recoilSpeed;
-            transform.localPosition = Vector3.Lerp(initialPosition, recoilTarget, t);
+            transform.localPosition = Vector3.Lerp(testpos, recoilTarget, t);
             yield return null;
         }
 
@@ -130,50 +147,64 @@ public class Gun : MonoBehaviour
         while(t < 1f)
         {
             t += Time.deltaTime * recoilSpeed;
-            transform.localPosition = Vector3.Lerp(recoilTarget, initialPosition, t);
+            transform.localPosition = Vector3.Lerp(recoilTarget, testpos, t);
             yield return null;
         }
 
-        transform.localPosition = initialPosition;
+        //transform.localPosition = initialPosition;
     }
 
 
-    public void TryToggleZoom(bool zoomed)
+    public void ToggleZoom()
     {
-        Debug.Log("trytogglezoom triggered");
-        if (zoomed)
-        {//now zoom out
-            //StartCoroutine(ZoomOut());
-            Debug.Log("zoomout");
-        } else
+        
+        Zoomed = !Zoomed;
+        StartCoroutine(ZoomLerp());
+       // MoveZoomLoc();
+    }
+
+    [SerializeField] private float zoomSpeed = 4f;
+    private IEnumerator ZoomLerp()
+    {
+        Vector3 initial;
+        Vector3 final;
+        
+        if(Zoomed)
         {
-            //zoom in
-            //StartCoroutine(ZoomIn());
-            Debug.Log("zoomin");
+            initial = hipPos.localPosition;
+            final = zoomPos.localPosition;
+        }
+        else
+        {
+            initial = zoomPos.localPosition;
+            final = hipPos.localPosition;
         }
         
-
         
-    }
-    public Transform ZoomInLoc;
-    public float zoomspeed = 2f;
-
-    private IEnumerator ZoomIn()
-    {
-        Vector3 ZoomPos = ZoomInLoc.position;
         float t = 0f;
 
         while(t < 1f)
         {
-            t += Time.deltaTime * zoomspeed;
-            transform.localPosition = Vector3.Lerp(initialPosition, ZoomPos, t);
+            t += Time.deltaTime * zoomSpeed;
+            transform.localPosition = Vector3.Lerp(initial, final, t);
             yield return null;
         }
 
-        
-        
+        //transform.localPosition = final;
+    }
+    private void MoveZoomLoc()
+    {
+        if(Zoomed == true)
+        {
 
-        transform.localPosition = ZoomPos;
+            gameObject.transform.localPosition = zoomPos.localPosition;
+           
+        } 
+        else
+        {
+            gameObject.transform.localPosition = hipPos.localPosition;
+           
+        }
     }
 
 

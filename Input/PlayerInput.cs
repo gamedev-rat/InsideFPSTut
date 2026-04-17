@@ -147,15 +147,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Zoom"",
-                    ""type"": ""Button"",
-                    ""id"": ""7efaa332-c309-459b-949b-09455bec1059"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""PickUp"",
                     ""type"": ""Button"",
                     ""id"": ""ac964174-2149-48e0-92cc-711fe76d11bf"",
@@ -168,6 +159,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""name"": ""Drop"",
                     ""type"": ""Button"",
                     ""id"": ""3105b042-77fd-4099-9a3f-b853e24e76d6"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ZoomButton"",
+                    ""type"": ""Button"",
+                    ""id"": ""37303f11-4e0a-4a33-a775-b3c4f759922e"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -342,17 +342,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""f3d5ffcb-6327-420c-8fc1-7021dd5cebe5"",
-                    ""path"": ""<Keyboard>/z"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Zoom"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""d9b9a7d6-16c1-465f-8764-cbf795f134f8"",
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
@@ -372,6 +361,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Drop"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""421cf441-c96a-4421-933f-ba57903ac044"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ZoomButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -386,9 +386,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_OnFoot_Shoot = m_OnFoot.FindAction("Shoot", throwIfNotFound: true);
         m_OnFoot_ShootRelease = m_OnFoot.FindAction("ShootRelease", throwIfNotFound: true);
         m_OnFoot_Reload = m_OnFoot.FindAction("Reload", throwIfNotFound: true);
-        m_OnFoot_Zoom = m_OnFoot.FindAction("Zoom", throwIfNotFound: true);
         m_OnFoot_PickUp = m_OnFoot.FindAction("PickUp", throwIfNotFound: true);
         m_OnFoot_Drop = m_OnFoot.FindAction("Drop", throwIfNotFound: true);
+        m_OnFoot_ZoomButton = m_OnFoot.FindAction("ZoomButton", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
@@ -475,9 +475,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_OnFoot_Shoot;
     private readonly InputAction m_OnFoot_ShootRelease;
     private readonly InputAction m_OnFoot_Reload;
-    private readonly InputAction m_OnFoot_Zoom;
     private readonly InputAction m_OnFoot_PickUp;
     private readonly InputAction m_OnFoot_Drop;
+    private readonly InputAction m_OnFoot_ZoomButton;
     /// <summary>
     /// Provides access to input actions defined in input action map "OnFoot".
     /// </summary>
@@ -514,10 +514,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Reload => m_Wrapper.m_OnFoot_Reload;
         /// <summary>
-        /// Provides access to the underlying input action "OnFoot/Zoom".
-        /// </summary>
-        public InputAction @Zoom => m_Wrapper.m_OnFoot_Zoom;
-        /// <summary>
         /// Provides access to the underlying input action "OnFoot/PickUp".
         /// </summary>
         public InputAction @PickUp => m_Wrapper.m_OnFoot_PickUp;
@@ -525,6 +521,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "OnFoot/Drop".
         /// </summary>
         public InputAction @Drop => m_Wrapper.m_OnFoot_Drop;
+        /// <summary>
+        /// Provides access to the underlying input action "OnFoot/ZoomButton".
+        /// </summary>
+        public InputAction @ZoomButton => m_Wrapper.m_OnFoot_ZoomButton;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -569,15 +569,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Reload.started += instance.OnReload;
             @Reload.performed += instance.OnReload;
             @Reload.canceled += instance.OnReload;
-            @Zoom.started += instance.OnZoom;
-            @Zoom.performed += instance.OnZoom;
-            @Zoom.canceled += instance.OnZoom;
             @PickUp.started += instance.OnPickUp;
             @PickUp.performed += instance.OnPickUp;
             @PickUp.canceled += instance.OnPickUp;
             @Drop.started += instance.OnDrop;
             @Drop.performed += instance.OnDrop;
             @Drop.canceled += instance.OnDrop;
+            @ZoomButton.started += instance.OnZoomButton;
+            @ZoomButton.performed += instance.OnZoomButton;
+            @ZoomButton.canceled += instance.OnZoomButton;
         }
 
         /// <summary>
@@ -607,15 +607,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Reload.started -= instance.OnReload;
             @Reload.performed -= instance.OnReload;
             @Reload.canceled -= instance.OnReload;
-            @Zoom.started -= instance.OnZoom;
-            @Zoom.performed -= instance.OnZoom;
-            @Zoom.canceled -= instance.OnZoom;
             @PickUp.started -= instance.OnPickUp;
             @PickUp.performed -= instance.OnPickUp;
             @PickUp.canceled -= instance.OnPickUp;
             @Drop.started -= instance.OnDrop;
             @Drop.performed -= instance.OnDrop;
             @Drop.canceled -= instance.OnDrop;
+            @ZoomButton.started -= instance.OnZoomButton;
+            @ZoomButton.performed -= instance.OnZoomButton;
+            @ZoomButton.canceled -= instance.OnZoomButton;
         }
 
         /// <summary>
@@ -699,13 +699,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnReload(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Zoom" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnZoom(InputAction.CallbackContext context);
-        /// <summary>
         /// Method invoked when associated input action "PickUp" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -719,5 +712,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnDrop(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ZoomButton" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnZoomButton(InputAction.CallbackContext context);
     }
 }
