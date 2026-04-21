@@ -13,7 +13,7 @@ public class Gun : MonoBehaviour
     [SerializeField] private AudioClip shootingSFX;
     [SerializeField] private float shootingVol = 0.25f;
 
-    [SerializeField] private float reloadTime = 1f;
+    [SerializeField] private float reloadTime = 0.6f;
     [SerializeField] private float fireRate = 0.15f;
     [SerializeField] private int magSize = 20;
 
@@ -41,7 +41,7 @@ public class Gun : MonoBehaviour
 
     private Quaternion initialRotation;
     private Vector3 initialPosition;
-    private Vector3 reloadRotationOffset = new Vector3(66, 50, 50);
+    [SerializeField] private Vector3 reloadRotationOffset = new Vector3(30, 0, 0); //rotate around x axis 30 deg
 
 
 

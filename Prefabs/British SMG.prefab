@@ -154,6 +154,7 @@ MonoBehaviour:
   droppedWeapon: {fileID: 1281955101004322, guid: 099eb166e5ef2aa4bb3dbb751a27f4e5, type: 3}
   recoilDistance: 0.06
   recoilSpeed: 15
+  reloadRotationOffset: {x: 30, y: 0, z: 0}
   zoomSpeed: 4
 --- !u!1 &1445072637834810
 GameObject:
