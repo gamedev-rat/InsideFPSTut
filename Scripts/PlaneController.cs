@@ -1,5 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
+
+
+
 public class PlaneController : MonoBehaviour
 {
     [Header("Plane Stats")]
@@ -15,6 +19,7 @@ public class PlaneController : MonoBehaviour
     private float rollInput;
     private float throttleInput;
 
+    public float lift = 135f; //based on how many mph thhis plane need to get off the ground
     [SerializeField] private Transform propeller;
 
     private float responseModifier
@@ -26,6 +31,7 @@ public class PlaneController : MonoBehaviour
     }
 
     Rigidbody rb;
+    [SerializeField] private TextMeshProUGUI hud;
 
     private void Awake()
     {
@@ -65,6 +71,7 @@ public class PlaneController : MonoBehaviour
     private void Update()
     {
         HandleInputs();
+        UpdateHUD();
         propeller.Rotate(Vector3.up *throttle);
     }
 
@@ -76,6 +83,19 @@ public class PlaneController : MonoBehaviour
         rb.AddTorque(transform.up * yawInput * responseModifier);
         rb.AddTorque(transform.right * pitchInput * responseModifier);
         rb.AddTorque(transform.forward * rollInput * responseModifier);
+
+        //forward speed = Vector3.Dot(rb.velocity, transform.forward)
+        //rb.AddForce(rb.transform.up * rb.linearVelocity.magnitude * lift);
+        rb.AddForce(rb.transform.up * Vector3.Dot(rb.linearVelocity, transform.forward) * lift);
+
+        
+    }
+
+    private void UpdateHUD()
+    {
+        hud.text = "Throttle " + throttle.ToString("F0")+"%\n";// 0 decimal values of this float
+        hud.text += "Airspeed: " + (rb.linearVelocity.magnitude * 3.6f * 0.62f).ToString("F0") + "mph\n"; //unity units into kilometer (if you are treating unity units as a meter ) then into miles
+        hud.text += "Altitude: " + transform.position.y.ToString("F0") + " m";
     }
 
 }
